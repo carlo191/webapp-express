@@ -11,33 +11,36 @@ function index  (req, res)  {
         res.json(results);
     });
 };
-// show
 function show(req, res) {
     const movieId = req.params.id; 
 
-    const sqlMovie = 'SELECT * FROM movies WHERE id = ?'; 
+   
+    const sqlMovie = `
+        SELECT movies.*, reviews.vote 
+        FROM movies
+        INNER JOIN reviews ON movies.id = reviews.movie_id
+        WHERE movies.id = ?;
+    `; 
 
-    
     connection.query(sqlMovie, [movieId], (err, results) => { 
         if (err) {
-            
             res.status(500).json({ error: err.message });
             return;
         }
 
         if (results.length === 0) {
-            // Risposta se il film non viene trovato
-            res.status(404).json({ error: 'Film non trovato' });
+         
+            res.status(404).json({ error: 'Film non trovato o senza recensioni' });
             return;
         }
 
-        
         const [movie] = results;
 
-        
+      
         res.json(movie);
     });
 }
+
 
 
 module.exports = { index, show};
