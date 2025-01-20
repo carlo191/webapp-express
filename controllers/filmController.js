@@ -24,7 +24,8 @@ function show(req, res) {
       genre,
       release_year
     FROM movies
-    WHERE id = ?`;
+    WHERE id = ?
+    ORDER BY created_at DESC`;
 
   const sqlReviews = `
     SELECT 
